@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Czarnecka Akademia Piękna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #d4af37;
+  --gold-light: #f3e5ab;
+  --gold-pale: #faf3dc;
+  --beige: #faf0e6;
+  --nude-pink: #f4e9e6;
+  --nude-dark: #edddd8;
+  --white: #ffffff;
+  --black: #1a1a1a;
+  --text-gray: #2a2a2a;
+  --shadow-light: rgba(0,0,0,0.05);
+  --shadow-gold: rgba(212,175,55,0.18);
+  --glass-bg: rgba(255,255,255,0.52);
+  --glass-border: rgba(255,255,255,0.72);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--nude-pink);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 15% 5%, rgba(243,229,171,0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(244,233,230,0.55) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 55% 45%, rgba(255,255,255,0.3) 0%, transparent 50%);
+  color: var(--black);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+}
+
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  overflow: hidden;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(26,26,26,0.48);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.hero-logo {
+  width: min(320px, 70vw);
+  filter: drop-shadow(0 0 24px rgba(212,175,55,0.45)) brightness(1.05);
+  animation: heroDown 1.3s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 7vw, 5rem);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  line-height: 1.1;
+  background: linear-gradient(110deg, var(--gold) 0%, #fffde7 22%, var(--gold) 45%, #fffde7 68%, var(--gold) 90%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 6s linear infinite, heroUp 1.3s 0.45s cubic-bezier(0.16,1,0.3,1) both;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+.hero-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  animation: heroUp 1.3s 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.hero-divider-line {
+  width: 45px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.7));
+}
+
+.hero-divider-line:last-child {
+  background: linear-gradient(90deg, rgba(212,175,55,0.7), transparent);
+}
+
+.hero-divider-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(212,175,55,0.8);
+}
+
+.hero-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.75rem, 2.2vw, 1.05rem);
+  font-weight: 400;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  animation: heroUp 1.3s 0.75s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  animation: heroUp 1.3s 1.2s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.hero-scroll-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+}
+
+.scroll-bar {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(to bottom, rgba(212,175,55,0.75), transparent);
+  animation: scrollAnim 2.2s ease-in-out infinite;
+}
+
+@keyframes scrollAnim {
+  0%,100% { transform: scaleY(1); opacity: 0.5; }
+  50% { transform: scaleY(1.4); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 250% center; }
+}
+
+@keyframes heroDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroUp {
+  from { opacity: 0; transform: translateY(35px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.intro-band {
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-band::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(700px, 100%);
+  height: 200px;
+  background: radial-gradient(ellipse, rgba(212,175,55,0.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.intro-band-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.intro-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: rgba(42,42,42,0.45);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.intro-tag-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.7;
+}
+
+.cards-section {
+  padding: 3rem 2rem 7rem;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.cards-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.cards-eyebrow {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.cards-title {
+  font-size: clamp(1.7rem, 3.5vw, 2.8rem);
+  font-weight: 500;
+  color: var(--black);
+  line-height: 1.2;
+}
+
+.cards-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.card-link {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+.card-inner {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+  box-shadow: 0 8px 32px var(--shadow-light), 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.card-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.card-link:hover .card-inner {
+  transform: translateY(-10px);
+  box-shadow:
+    0 28px 60px rgba(212,175,55,0.18),
+    0 10px 30px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(212,175,55,0.35);
+  border-color: rgba(212,175,55,0.4);
+}
+
+.card-link:hover .card-inner::before { opacity: 1; }
+
+.card-image-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+.card-link:hover .card-image { transform: scale(1.06); }
+
+.card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(26,26,26,0.55) 0%, rgba(26,26,26,0.05) 45%, transparent 100%);
+  transition: opacity 0.4s ease;
+}
+
+.card-badge {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212,175,55,0.3);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-radius: 1px;
+  z-index: 1;
+}
+
+.card-footer {
+  padding: 1.8rem 1.8rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.card-category {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--black);
+  line-height: 1.25;
+}
+
+.card-desc {
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(42,42,42,0.7);
+  margin-top: 0.3rem;
+}
+
+.card-cta {
+  margin-top: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: gap 0.3s ease;
+}
+
+.card-link:hover .card-cta { gap: 0.9rem; }
+
+.card-cta-arrow {
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.card-cta-arrow::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid var(--gold);
+  border-top: 1px solid var(--gold);
+  transform: rotate(45deg);
+}
+
+.card-link:hover .card-cta-arrow { width: 34px; }
+
+footer {
+  background: var(--black);
+  color: rgba(255,255,255,0.75);
+  padding: 4rem 2rem 2rem;
+  border-top: 1px solid rgba(212,175,55,0.35);
+}
+
+.footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.footer-brand {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer-brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 1px;
+}
+
+.footer-brand-sub {
+  font-size: 0.6rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.footer-gold-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+}
+
+.footer-link:hover {
+  color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.footer-address {
+  font-weight: 300;
+  font-size: 0.85rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.footer-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-copy {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.04em;
+}
+
+.footer-credits {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.25);
+}
+
+.footer-credits a {
+  color: rgba(212,175,55,0.55);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.footer-credits a:hover { color: var(--gold); }
+
+.hidden {
+  opacity: 0;
+  transform: translateY(45px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+
+.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .cards-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+  .cards-section { padding: 2rem 1.5rem 5rem; }
+}
+
+@media (max-width: 600px) {
+  .hero-scroll { display: none; }
+  .intro-band { padding: 2rem 1.5rem; }
+  .cards-header { margin-bottom: 2.5rem; }
+  .footer-links { flex-direction: column; align-items: center; gap: 1.4rem; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <video class="hero-video" src="head.mp4" autoplay loop muted playsinline></video>
+  <div class="hero-overlay"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+  <div class="hero-content">
+    <img src="logo.png" alt="Czarnecka Akademia Piękna" class="hero-logo hidden" onerror="this.style.display='none'">
+    <h1 class="hero-title hidden">Czarnecka Akademia Piękna</h1>
+    <div class="hero-divider hidden">
+      <div class="hero-divider-line"></div>
+      <div class="hero-divider-dot"></div>
+      <div class="hero-divider-line"></div>
+    </div>
+    <p class="hero-subtitle hidden">Aleksandra Czarnecka</p>
+  </div>
+  <div class="hero-scroll">
+    <span class="hero-scroll-label">Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</header>
+
+<div class="intro-band">
+  <div class="intro-band-inner hidden">
+    <span class="intro-tag">
+      <span class="intro-tag-dot"></span>
+      International Champion
+      <span class="intro-tag-dot"></span>
+    </span>
+    <span class="intro-tag">
+      <span class="intro-tag-dot"></span>
+      Judge Worldwide
+      <span class="intro-tag-dot"></span>
+    </span>
+    <span class="intro-tag">
+      <span class="intro-tag-dot"></span>
+      Speaker Worldwide
+      <span class="intro-tag-dot"></span>
+    </span>
+  </div>
+</div>
+
+<section class="cards-section">
+  <div class="cards-header hidden">
+    <p class="cards-eyebrow">Odkryj świat piękna</p>
+    <h2 class="cards-title">Ekspertyza na <em>każdym etapie</em></h2>
+  </div>
+
+  <div class="cards-grid">
+    <a href="om.html" class="card-link hidden">
+      <div class="card-inner">
+        <div class="card-image-wrap">
+          <img src="omnie.jpg" alt="O mnie" class="card-image" onerror="this.style.background='var(--nude-dark)'">
+          <div class="card-image-overlay"></div>
+          <span class="card-badge">Poznaj mnie</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-category">O mnie</span>
+          <h3 class="card-title">Historia, pasja &amp; misja</h3>
+          <p class="card-desc">Poznaj historię, doświadczenie i pasję stojącą za marką. Ponad dekada precyzji i artystycznej wizji.</p>
+          <div class="card-cta">
+            <span>Dowiedz się więcej</span>
+            <div class="card-cta-arrow"></div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="szk.html" class="card-link hidden">
+      <div class="card-inner">
+        <div class="card-image-wrap">
+          <img src="szk.jpg" alt="Szkolenia" class="card-image" onerror="this.style.background='var(--nude-dark)'">
+          <div class="card-image-overlay"></div>
+          <span class="card-badge">Szkolenia</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-category">Edukacja</span>
+          <h3 class="card-title">Profesjonalne szkolenia beauty</h3>
+          <p class="card-desc">Programy tworzone z myślą o Twoim rozwoju i jakości. Wiedza przekazywana przez mistrzynię.</p>
+          <div class="card-cta">
+            <span>Zobacz ofertę</span>
+            <div class="card-cta-arrow"></div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="us.html" class="card-link hidden">
+      <div class="card-inner">
+        <div class="card-image-wrap">
+          <img src="usl.jpg" alt="Usługi" class="card-image" onerror="this.style.background='var(--nude-dark)'">
+          <div class="card-image-overlay"></div>
+          <span class="card-badge">Usługi</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-category">Zabiegi</span>
+          <h3 class="card-title">Usługi dla kobiet premium</h3>
+          <p class="card-desc">Zabiegi stworzone dla kobiet ceniących profesjonalizm, estetykę i pełne bezpieczeństwo.</p>
+          <div class="card-cta">
+            <span>Sprawdź zabiegi</span>
+            <div class="card-cta-arrow"></div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand hidden">
+      <span class="footer-brand-name">Czarnecka Akademia Piękna</span>
+      <span class="footer-brand-sub">Aleksandra Czarnecka</span>
+    </div>
+    <div class="footer-gold-line hidden"></div>
+    <div class="footer-links hidden">
+      <a href="pp.html" class="footer-link">Polityka prywatności</a>
+      <a href="df.html" class="footer-link">Dane firmy</a>
+    </div>
+    <div class="footer-address hidden">
+      Batalionu AK "Karpaty" 5B<br>
+      00-712 Warszawa, Mokotów
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom hidden">
+      <span class="footer-copy">&copy; 2026 Czarnecka Akademia Piękna. Wszelkie prawa zastrzeżone.</span>
+      <span class="footer-credits">Strona stworzona przez <a href="https://str0nix.pl" target="_blank" rel="noopener">Str0nix.pl</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.hidden').forEach((el, i) => {
+    el.style.transitionDelay = (Math.floor(i % 5) * 0.1) + 's';
+    observer.observe(el);
+  });
+
+  const container = document.getElementById('heroParticles');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    const size = Math.random() * 5 + 2;
+    p.style.cssText = [
+      'position:absolute',
+      'border-radius:50%',
+      'pointer-events:none',
+      'opacity:0',
+      `width:${size}px`,
+      `height:${size}px`,
+      `left:${Math.random() * 100}%`,
+      `top:${Math.random() * 100}%`,
+      `background:radial-gradient(circle,rgba(243,229,171,.85) 0%,transparent 70%)`,
+      `animation:pFloat ${Math.random() * 7 + 6}s ${Math.random() * 9}s infinite ease-in-out`
+    ].join(';');
+    container.appendChild(p);
+  }
+
+  const s = document.createElement('style');
+  s.textContent = '@keyframes pFloat{0%{transform:translateY(0) scale(.4);opacity:0}45%{opacity:.65}100%{transform:translateY(-130px) scale(1.4);opacity:0}}';
+  document.head.appendChild(s);
+
+});
+</script>
+</body>
+</html>

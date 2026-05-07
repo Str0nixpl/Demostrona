@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szkolenia | Czarnecka Akademia Piękna</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-pale: rgba(212, 175, 55, 0.08);
+            --nude-pink: #f4e9e6;
+            --nude-dark: #ede0db;
+            --white: #ffffff;
+            --black: #0f0f0f;
+            --text-dark: #1a1a1a;
+            --text-gray: #3a3a3a;
+            --text-light: #7a7a7a;
+            --shadow-gold: rgba(212, 175, 55, 0.15);
+            --shadow-dark: rgba(0, 0, 0, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nude-pink);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 3rem;
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(244, 233, 230, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 2px 30px rgba(0,0,0,0.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 1px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active { color: var(--gold); }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 201;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 1.5px;
+            background-color: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); background-color: var(--text-dark); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); background-color: var(--text-dark); }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0; right: -100%;
+            width: 100%; max-width: 380px;
+            height: 100vh;
+            background: rgba(244, 233, 230, 0.98);
+            backdrop-filter: blur(25px);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-left: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .menu-overlay.open { right: 0; }
+
+        .menu-link {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            margin: 1.2rem 0;
+            transition: color 0.3s ease, transform 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .menu-link:hover { color: var(--gold); transform: translateX(8px); }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 650px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.08);
+            transition: transform 8s ease;
+            z-index: 0;
+        }
+
+        .hero-bg.loaded { transform: scale(1); }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(10, 8, 6, 0.45) 0%,
+                rgba(10, 8, 6, 0.55) 50%,
+                rgba(10, 8, 6, 0.7) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s 0.3s forwards;
+        }
+
+        .hero-logo {
+            max-width: 160px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4)) brightness(1.1);
+            opacity: 0;
+            animation: fadeUp 1s 0.5s forwards;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 300;
+            line-height: 1.0;
+            color: var(--white);
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s 0.7s forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            background: linear-gradient(110deg, var(--gold) 0%, #fffde7 40%, var(--gold) 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shine 4s linear infinite;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: 0 auto 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s 0.9s forwards;
+        }
+
+        .hero-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            font-weight: 300;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s 1.1s forwards;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            animation: fadeUp 1s 1.5s forwards;
+        }
+
+        .hero-scroll span {
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            font-weight: 300;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, rgba(212,175,55,0.8), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.4; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .intro-section {
+            padding: 8rem 2rem 5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-label {
+            font-size: 0.72rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .intro-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 4vw, 3.8rem);
+            font-weight: 400;
+            line-height: 1.25;
+            color: var(--text-dark);
+            margin-bottom: 2.5rem;
+        }
+
+        .intro-title em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .intro-text {
+            font-size: 1.05rem;
+            line-height: 1.95;
+            color: var(--text-gray);
+            font-weight: 300;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .gold-line {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: 3rem auto;
+        }
+
+        .video-section {
+            padding: 4rem 2rem 8rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .video-section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .video-section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 3rem);
+            font-weight: 400;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+        }
+
+        .video-section-title em { font-style: italic; color: var(--gold); }
+
+        .video-section-sub {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .video-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--black);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(212,175,55,0.15);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .video-wrapper:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 35px 70px rgba(0,0,0,0.22), 0 0 0 1px rgba(212,175,55,0.4);
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .video-caption {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+            border-top: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .video-caption-label {
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .video-caption-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--white);
+            letter-spacing: 0.5px;
+        }
+
+        .trainings-section {
+            padding: 4rem 2rem 8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .category-block {
+            margin-bottom: 7rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .category-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            font-weight: 300;
+            color: rgba(212,175,55,0.2);
+            line-height: 1;
+            min-width: 80px;
+            letter-spacing: -2px;
+        }
+
+        .category-info {}
+
+        .category-eyebrow {
+            font-size: 0.68rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .category-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 500;
+            color: var(--text-dark);
+            line-height: 1.1;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .training-card {
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212,175,55,0.25);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .training-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            right: 0; height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .training-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(212,175,55,0.5);
+            box-shadow: 0 25px 55px rgba(212,175,55,0.15), inset 0 1px 0 rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.75);
+        }
+
+        .training-card:hover::before { opacity: 1; }
+
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.55rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.3;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-gray);
+            font-weight: 300;
+        }
+
+        .card-bottom {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(212,175,55,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-tag {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .card-dot {
+            width: 3px; height: 3px;
+            background: rgba(212,175,55,0.4);
+            border-radius: 50%;
+        }
+
+        .cta-section {
+            position: relative;
+            padding: 10rem 2rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .cta-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1208 0%, #0f0a04 50%, #1a1208 100%);
+            z-index: 0;
+        }
+
+        .cta-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(212,175,55,0.12) 0%, transparent 70%);
+        }
+
+        .cta-bg::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-eyebrow {
+            font-size: 0.72rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .cta-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 300;
+            color: var(--white);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .cta-title em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .cta-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: 2.5rem auto;
+        }
+
+        .cta-sub {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.5);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            margin-bottom: 3.5rem;
+        }
+
+        .btn-gold {
+            display: inline-block;
+            padding: 1.1rem 3.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--black);
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            border-radius: 60px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.3);
+        }
+
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.5), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(212,175,55,0.45);
+        }
+
+        .btn-gold:hover::after { left: 100%; }
+
+        .footer {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 4rem 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(212,175,55,0.3);
+        }
+
+        .footer-content {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-link:hover { color: var(--gold); }
+
+        .footer-credits {
+            font-size: 0.82rem;
+            color: #555;
+            font-weight: 300;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 2rem;
+            width: 100%;
+        }
+
+        .footer-credits a { color: var(--gold); font-weight: 500; }
+
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .nav-header { justify-content: flex-end; }
+            .cards-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { letter-spacing: 1px; }
+            .video-grid { grid-template-columns: 1fr; }
+            .cards-grid { grid-template-columns: 1fr; }
+            
+            /* Gwarancja wyśrodkowania na telefonach */
+            .category-header { 
+                flex-direction: column; 
+                text-align: center; 
+                gap: 1rem; 
+                justify-content: center; 
+            }
+            .category-number { font-size: 4rem; min-width: auto; }
+            .trainings-section { padding: 3rem 1.5rem 6rem; }
+            .video-section { padding: 2rem 1.5rem 6rem; text-align: center; }
+            .intro-section { padding: 6rem 1.5rem 3rem; text-align: center; }
+            .footer-links { flex-direction: column; gap: 1.2rem; align-items: center; }
+            
+            .training-card { 
+                padding: 2.5rem 1.5rem; 
+                text-align: center; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+            }
+            .card-bottom { 
+                justify-content: center; 
+                width: 100%; 
+            }
+            
+            .cta-section { padding: 5rem 1.5rem; text-align: center; }
+            .cta-title { font-size: clamp(2rem, 8vw, 3.5rem); text-align: center; }
+            .cta-sub { text-align: center; }
+            .btn-gold { margin: 0 auto; display: block; width: fit-content; }
+            .video-caption { text-align: center; }
+            
+            .hero-content { text-align: center; width: 100%; }
+            .hero-subtitle { margin: 0 auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <nav class="nav-links">
+            <a href="index.html" class="nav-link">Strona Główna</a>
+            <a href="om.html" class="nav-link">O mnie</a>
+            <a href="szk.html" class="nav-link active">Szkolenia</a>
+            <a href="us.html" class="nav-link">Usługi</a>
+            <a href="kontakt.html" class="nav-link">Kontakt</a>
+        </nav>
+        <div class="hamburger" id="hamburgerMenu">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <nav class="menu-overlay" id="menuOverlay">
+        <a href="index.html" class="menu-link">Strona Główna</a>
+        <a href="om.html" class="menu-link">O mnie</a>
+        <a href="szk.html" class="menu-link" style="color: var(--gold);">Szkolenia</a>
+        <a href="us.html" class="menu-link">Usługi</a>
+        <a href="kontakt.html" class="menu-link">Kontakt</a>
+    </nav>
+
+    <section class="hero">
+        <video class="hero-bg" id="heroBg" autoplay loop muted playsinline>
+            <source src="szkg.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-eyebrow">Czarnecka Akademia Piękna</span>
+            <img src="logo.png" alt="Logo" class="hero-logo" onerror="this.style.display='none'">
+            <h1 class="hero-title">Szkolenia<br><em>Beauty</em></h1>
+            <div class="hero-divider"></div>
+            <p class="hero-subtitle">Mistrzowskie techniki &bull; Wiedza ekspercka &bull; Certyfikacja</p>
+        </div>
+        <div class="hero-scroll">
+            <span>Odkryj ofertę</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <div class="intro-section">
+        <span class="intro-label reveal">Filozofia nauczania</span>
+        <h2 class="intro-title reveal">
+            Wiedza, która<br><em>zmienia kariery</em>
+        </h2>
+        <div class="gold-line reveal"></div>
+        <p class="intro-text reveal">
+            Szkolenia w Czarneckiej Akademii Piękna to inwestycja w wiedzę, która przynosi realne rezultaty. Przekazuję lata międzynarodowego doświadczenia w przystępnej formie, aby każda z moich kursantek mogła pewnie i bezpiecznie budować pozycję lidera w swojej branży. Odkryj ofertę dostosowaną do Twojego poziomu zaawansowania.
+        </p>
+    </div>
+
+    <div class="video-section">
+        <div class="video-section-header reveal">
+            <p class="video-section-sub">Zajrzyj za kulisy</p>
+            <h3 class="video-section-title">Szkolenia w <em>akcji</em></h3>
+        </div>
+        <div class="gold-line reveal"></div>
+        <div class="video-grid">
+            <div class="video-wrapper reveal">
+                <video controls preload="metadata" poster="">
+                    <source src="szk1.mp4" type="video/mp4">
+                    Twoja przeglądarka nie obsługuje odtwarzacza wideo.
+                </video>
+                <div class="video-caption">
+                    <span class="video-caption-label">Fragment szkolenia</span>
+                    <div class="video-caption-title">Techniki PMU — Masterclass</div>
+                </div>
+            </div>
+            <div class="video-wrapper reveal">
+                <video controls preload="metadata" poster="">
+                    <source src="szk2.mp4" type="video/mp4">
+                    Twoja przeglądarka nie obsługuje odtwarzacza wideo.
+                </video>
+                <div class="video-caption">
+                    <span class="video-caption-label">Fragment szkolenia</span>
+                    <div class="video-caption-title">Usuwanie i korekta PMU</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="trainings-section">
+
+        <div class="category-block">
+            <div class="category-header reveal">
+                <span class="category-number">01</span>
+                <div class="category-info">
+                    <span class="category-eyebrow">Specjalizacja</span>
+                    <h3 class="category-title">Makijaż Permanentny (PMU)</h3>
+                </div>
+            </div>
+            <div class="cards-grid">
+                <div class="training-card reveal">
+                    <span class="card-icon">🖋️</span>
+                    <h4 class="card-title">PMU Basic — Od podstaw</h4>
+                    <p class="card-desc">Kompleksowe i intensywne szkolenie dla osób stawiających pierwsze kroki. Obejmuje pełną teorię, architekturę rysunku oraz bezpieczną pigmentację brwi, ust i powiek na modelkach.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Podstawowy</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Certyfikat</span>
+                    </div>
+                </div>
+                <div class="training-card reveal">
+                    <span class="card-icon">⭐</span>
+                    <h4 class="card-title">PMU Masterclass</h4>
+                    <p class="card-desc">Warsztaty dedykowane pracującym linergistkom. Nauka najnowszych, autorskich technik (Powder Brows, Aquarelle Lips), by wynieść Twoje prace na światowy poziom.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Zaawansowany</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Certyfikat</span>
+                    </div>
+                </div>
+                <div class="training-card reveal">
+                    <span class="card-icon">🏆</span>
+                    <h4 class="card-title">Przygotowanie do Mistrzostw</h4>
+                    <p class="card-desc">Indywidualny mentoring prowadzony przez sędziego światowej klasy. Praca nad perfekcją techniczną, symetrią i strategią pod kątem międzynarodowych mistrzostw PMU.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Mentoring</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Indywidualny</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-block">
+            <div class="category-header reveal">
+                <span class="category-number">02</span>
+                <div class="category-info">
+                    <span class="category-eyebrow">Korekta i regeneracja</span>
+                    <h3 class="category-title">Usuwanie i Korekta PMU</h3>
+                </div>
+            </div>
+            <div class="cards-grid">
+                <div class="training-card reveal">
+                    <span class="card-icon">⚡</span>
+                    <h4 class="card-title">Laser Q-Switch / Pico</h4>
+                    <p class="card-desc">Profesjonalna nauka bezpiecznej pracy z technologią laserową. Skuteczne rozbijanie pigmentu, parametryzacja i procesy gojenia po usunięciu ciemnych i chłodnych tonów.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Technologia</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Certyfikat</span>
+                    </div>
+                </div>
+                <div class="training-card reveal">
+                    <span class="card-icon">🧪</span>
+                    <h4 class="card-title">Remover — Metody chemiczne</h4>
+                    <p class="card-desc">Eksperckie protokoły usuwania trudnych pigmentów za pomocą removerów kwasowych i zasadowych. Pogłębiona wiedza o reakcjach chemicznych w skórze.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Ekspercki</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Certyfikat</span>
+                    </div>
+                </div>
+                <div class="training-card reveal">
+                    <span class="card-icon">🔄</span>
+                    <h4 class="card-title">Skin Needling & Multi-Removal</h4>
+                    <p class="card-desc">Zaawansowane szkolenie z regeneracji tkanek, usuwania blizn po nieudanym PMU oraz łączenia technik dla uzyskania najszybszych, terapeutycznych efektów.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Zaawansowany</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Certyfikat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-block">
+            <div class="category-header reveal">
+                <span class="category-number">03</span>
+                <div class="category-info">
+                    <span class="category-eyebrow">Estetyka i biznes</span>
+                    <h3 class="category-title">Medycyna Estetyczna i Marka</h3>
+                </div>
+            </div>
+            <div class="cards-grid">
+                <div class="training-card reveal">
+                    <span class="card-icon">💉</span>
+                    <h4 class="card-title">Lip Filler — Modelowanie Ust</h4>
+                    <p class="card-desc">Nauka technik iniekcyjnych kwasu hialuronowego. Nowoczesne modelowanie kształtu (Russian Lips), korekta asymetrii i głębokie nawilżanie dopasowane do urody klientki.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Medycyna estetyczna</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Certyfikat</span>
+                    </div>
+                </div>
+                <div class="training-card reveal">
+                    <span class="card-icon">🎨</span>
+                    <h4 class="card-title">Pigmentologia Ekspercka</h4>
+                    <p class="card-desc">Zaawansowana wiedza o składach chemicznych barwników. Dlaczego brwi sinieją, jak przewidywać osadzanie koloru i jak unikać podstawowych błędów technicznych.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Teoria</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Ekspercki</span>
+                    </div>
+                </div>
+                <div class="training-card reveal">
+                    <span class="card-icon">📈</span>
+                    <h4 class="card-title">Budowanie Marki Osobistej</h4>
+                    <p class="card-desc">Od zdolnej linergistki do rozpoznawalnej marki premium. Jak kreować wizerunek eksperta, pozyskiwać luksusowego klienta i planować rozwój własnej akademii.</p>
+                    <div class="card-bottom">
+                        <span class="card-tag">Biznes</span>
+                        <div class="card-dot"></div>
+                        <span class="card-tag">Strategia</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="cta-section">
+        <div class="cta-bg"></div>
+        <div class="cta-content">
+            <span class="cta-eyebrow reveal">Gotowa na następny poziom?</span>
+            <h2 class="cta-title reveal">Zbudujmy Twoją pozycję<br><em>eksperta.</em></h2>
+            <div class="cta-divider reveal"></div>
+            <p class="cta-sub reveal">Skontaktuj się i wybierz termin szkolenia dopasowany do Twoich potrzeb.</p>
+            <a href="kontakt.html" class="btn-gold reveal">Zarezerwuj termin szkolenia</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links reveal">
+                <a href="index.html" class="footer-link">Powrót do strony głównej</a>
+                <a href="pp.html" class="footer-link">Polityka prywatności</a>
+                <a href="df.html" class="footer-link">Dane firmy</a>
+            </div>
+            <div class="footer-credits reveal">
+                Strona stworzona przez <a href="https://str0nix.pl" target="_blank" rel="noopener noreferrer">Str0nix.pl</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const heroBg = document.getElementById('heroBg');
+            if (heroBg) {
+                setTimeout(() => heroBg.classList.add('loaded'), 100);
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+
+            document.querySelectorAll('.reveal').forEach((el, i) => {
+                el.style.transitionDelay = (i % 4) * 0.1 + 's';
+                observer.observe(el);
+            });
+
+            const hamburgerBtn = document.getElementById('hamburgerMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            if (hamburgerBtn && menuOverlay) {
+                hamburgerBtn.addEventListener('click', () => {
+                    hamburgerBtn.classList.toggle('open');
+                    menuOverlay.classList.toggle('open');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
